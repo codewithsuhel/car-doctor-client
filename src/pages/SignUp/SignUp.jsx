@@ -1,10 +1,15 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import img from "../../../src/assets/images/login/login.svg";
-import { useContext } from "react";
+import { useContext} from "react";
 import { AuthContext } from "../../providers/AuthProvider";
+import SocialLogin from "../Shared/SocialLogin/SocialLogin";
 
 const SignUp = () => {
-    const {createUser} = useContext(AuthContext) ;
+    const {createUser} = useContext(AuthContext);
+    const location = useLocation();
+    const navigate = useNavigate();
+    const from = location.state?.from?.pathname || '/login';
+
 
     const handleSignUp = (event) => {
         event.preventDefault();
@@ -17,15 +22,14 @@ const SignUp = () => {
         createUser(email, password)
         .then(result =>{
             const user = result.user;
-            console.log(user)
+            console.log(user);
+            navigate(from, {replace: true})
         })
         .catch(error=>{
             console.log(error.message)
-        })
-
-
-        
+        })  
       };
+     
     return (
         <div className="hero min-h-screen bg-base-200">
       <div className="hero-content flex-col lg:flex-row">
@@ -65,7 +69,7 @@ const SignUp = () => {
                   <span className="label-text"> Confirm Password</span>
                 </label>
                 <input
-                  type="text"
+                  type="password"
                   placeholder="password"
                   name="password"
                   className="input input-bordered"
@@ -86,6 +90,7 @@ const SignUp = () => {
               </div>
             </form>
             <p className="my-4 text-center">Already have an account <Link className="text-orange-600 font-bold" to='/login'>Login</Link></p>
+            <SocialLogin></SocialLogin>
           </div>
         </div>
       </div>
